@@ -1,1 +1,2 @@
 # PokeApi
+INSERT INTO PRODUCT (PRODUCT_ID, NAME, PRICE, DESCR, DESCR_CATEGORY, LINK_URL_IMAGE) VALUES (1, 'Caneca Super Mario Bros.', 33.65, 'Utilidades', 'Produtos Geek', 'https:\\www.github.com.br');
