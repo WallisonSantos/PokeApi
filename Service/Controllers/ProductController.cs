@@ -1,6 +1,6 @@
-using AspNetCore.Service.Data.ValueObjects;
-using AspNetCore.Service.Repository;
 using Microsoft.AspNetCore.Mvc;
+using AspNetCore.Service.Repository;
+using AspNetCore.Service.Data.ValueObjects;
 
 namespace AspNetCore.Service.Controllers
 {
@@ -25,7 +25,7 @@ namespace AspNetCore.Service.Controllers
         public async Task<ActionResult<ProductVO>> FindById(long id)
         {
             var product = await _repository.FindById(id);
-            if (product == null) return NotFound();
+            if (product.Id <= 0) return NotFound();
             return Ok(product);
         }
         
