@@ -2,16 +2,16 @@ using Microsoft.AspNetCore.Mvc;
 using AspNetCore.Service.Repository;
 using AspNetCore.Service.Data.ValueObjects;
 
-namespace AspNetCore.Service.Controllers
-{
-    [Route("api/v1/[controller]")]
-    [ApiController]
-    public class ProductController : ControllerBase
-    {
+namespace AspNetCore.Service.Controller {
+    
+    public class ProductController : ControllerBase {
+
         private IProductRepository _repository;
-        public ProductController(IProductRepository repository)
+        private IEnderecoRepository _repositoryEnder;
+        public ProductController(IProductRepository repository,IEnderecoRepository repositoryEnder)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repositoryEnder = repositoryEnder ?? throw new ArgumentNullException(nameof(repositoryEnder));
         }
 
         [HttpGet]
@@ -28,9 +28,16 @@ namespace AspNetCore.Service.Controllers
             if (product.Id <= 0) return NotFound();
             return Ok(product);
         }
+        [HttpGet("{cep}")]
+        public async Task<ActionResult<EnderecoVO>> FindByCep(string cep)
+        {
+            var endereco = await _repositoryEnder.FindByCep(cep);
+            if (endereco.Cep == null) return NotFound();
+            return Ok(endereco);
+        }
         
         [HttpPost]
-        public async Task<ActionResult<ProductVO>> Create(ProductVO productVO)
+        public async Task<ActionResult<ProductVO>> Create([FromBody]ProductVO productVO)
         {
             if (productVO == null) return BadRequest();
             var product = await _repository.Create(productVO);
@@ -38,7 +45,7 @@ namespace AspNetCore.Service.Controllers
         }        
 
         [HttpPut]
-        public async Task<ActionResult<ProductVO>> Update(ProductVO productVO)
+        public async Task<ActionResult<ProductVO>> Update([FromBody]ProductVO productVO)
         {
             if (productVO == null) return BadRequest();
             var product = await _repository.Update(productVO);
